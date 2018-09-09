@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/comicTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Avoidance" />
+
+    <ImageView
+        android:id="@+id/comicImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"
+        app:layout_constraintTop_toBottomOf="@+id/comicTitle"
+        tools:background="@android:color/holo_blue_dark"
+        tools:ignore="ContentDescription"
+        tools:layout_height="200dp" />
+
+    <com.like.LikeButton
+        android:id="@+id/comicLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon_size="25dp"
+        app:icon_type="Heart"
+        app:layout_constraintTop_toBottomOf="@+id/comicImage"
+        tools:background="@drawable/heart_on"
+        tools:layout_height="25dp"
+        tools:layout_width="25dp" />
+
+    <TextView
+        android:id="@+id/comicDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/comicLike"
+        tools:text="Hobby: seeing how many menu selections you can get someone to go through before they realize you're not an automated system and/or hang up." />
+
+</android.support.constraint.ConstraintLayout>

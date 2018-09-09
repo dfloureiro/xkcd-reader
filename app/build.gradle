@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.dfl.xkdc"
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$android_support_version"
+    implementation "com.android.support:support-annotations:$android_support_version"
+    implementation "com.android.support:design:$android_support_version"
+    implementation "com.android.support.constraint:constraint-layout:$contraint_layout_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkoltin_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation("com.squareup.picasso:picasso:$picasso_version") {
+        exclude group: 'com.android.support', module: "exifinterface"
+    }
+    implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation "com.github.jd-alexander:LikeButton:$likebutton_version"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
+    testImplementation "org.robolectric:shadows-supportv4:$robolectric_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+}
+
+kapt {
+    generateStubs = true
+}
