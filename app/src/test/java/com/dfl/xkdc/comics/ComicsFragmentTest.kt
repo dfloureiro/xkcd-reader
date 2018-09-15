@@ -35,7 +35,7 @@ class ComicsFragmentTest {
         cut = ComicsFragment.newInstance().also {
             it.presenter = presenter
             it.adapter = adapter
-            SupportFragmentTestUtil.startFragment(it)
+            SupportFragmentTestUtil.startVisibleFragment(it)
         }
     }
 
@@ -47,7 +47,9 @@ class ComicsFragmentTest {
         recyclerView.layout(0, 0, 100, 1000)
 
         //when
-        (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(100, 1000)
+        (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(100, 5)
+        recyclerView.scrollToPosition(100)
+        recyclerView.scrollTo(0, 100)
 
         //then
         verify(presenter).loadComic()

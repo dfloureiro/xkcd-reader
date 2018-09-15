@@ -7,6 +7,7 @@ import com.dfl.xkdc.di.components.DaggerXkcdComponent
 import com.dfl.xkdc.di.components.XkcdComponent
 import com.dfl.xkdc.di.modules.ComicsModule
 import com.dfl.xkdc.di.modules.NetworkModule
+import com.dfl.xkdc.di.modules.RepositoryModule
 import com.dfl.xkdc.di.modules.XkcdModule
 
 class InjectorImpl : Injector {
@@ -16,6 +17,7 @@ class InjectorImpl : Injector {
     override fun inject(application: XkcdApplication) {
         xkcdComponent = DaggerXkcdComponent.builder()
                 .networkModule(NetworkModule())
+                .repositoryModule(RepositoryModule(application))
                 .xkcdModule(XkcdModule())
                 .build()
         xkcdComponent.inject(application)

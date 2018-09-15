@@ -33,34 +33,52 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //android
     implementation "com.android.support:appcompat-v7:$android_support_version"
     implementation "com.android.support:support-annotations:$android_support_version"
     implementation "com.android.support:design:$android_support_version"
     implementation "com.android.support.constraint:constraint-layout:$contraint_layout_version"
+
+    //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+
+    //rx
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkoltin_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    //picasso
     implementation("com.squareup.picasso:picasso:$picasso_version") {
         exclude group: 'com.android.support', module: "exifinterface"
     }
+
+    //timber
     implementation "com.jakewharton.timber:timber:$timber_version"
-    implementation "com.github.jd-alexander:LikeButton:$likebutton_version"
+
+    //dagger
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
-    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+    //room
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
 
-    testImplementation "junit:junit:$junit_version"
+    //like button
+    implementation "com.github.jd-alexander:LikeButton:$likebutton_version"
+
+    //leakcanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
+
+    //tests
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation "org.robolectric:robolectric:$robolectric_version"
     testImplementation "org.robolectric:shadows-supportv4:$robolectric_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
-}
-
-kapt {
-    generateStubs = true
 }

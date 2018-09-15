@@ -1,17 +1,15 @@
 package com.dfl.xkdc.comics
 
 import android.support.annotation.VisibleForTesting
+import com.dfl.xkdc.comics.uimodel.Comic
 import com.dfl.xkdc.schedulers.RxSchedulers
-import com.dfl.xkdc.network.XkcdServices
-import com.dfl.xkdc.comics.uimodel.ComicsMapper
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class ComicsPresenter(private val view: ComicsFragment,
-                      private val mapper: ComicsMapper,
-                      private val services: XkcdServices,
+                      private val repository: ComicsRepository,
                       private val rxSchedulers: RxSchedulers,
                       private val compositeDisposable: CompositeDisposable) {
 
@@ -20,30 +18,58 @@ class ComicsPresenter(private val view: ComicsFragment,
     var latestComicId: Int = defaultId
 
     fun subscribe() {
-        loadComic()
+        loadComicFromNetwork()
     }
 
     fun loadComic() {
-        if (latestComicId > 1 || latestComicId == defaultId) {
-            val disposable = when (latestComicId) {
-                defaultId ->
-                    services.getComic().doOnSuccess { latestComicId = it.num }
-                else -> {
-                    latestComicId -= 1
-                    services.getComic(latestComicId)
-                }
-            }
+        if (latestComicId > 1) {
+            latestComicId -= 1
+            val disposable = repository.getComicDatabase(latestComicId)
                     .subscribeOn(rxSchedulers.io())
-                    .map { mapper.convert(it) }
+                    .doOnError { Timber.d("Database can't find comic with id $latestComicId") }
+                    .doOnSuccess { view.isLoading = false }
                     .observeOn(rxSchedulers.mainThread())
-                    .doOnSubscribe { view.showProgress() }
-                    .doFinally { view.hideProgress() }
-                    .doFinally { view.isLoading = false }
-                    .subscribeBy(
-                            onSuccess = { view.show(it) },
-                            onError = {}
-                    )
+                    .doOnSuccess { view.show(it) }
+                    .subscribeBy(onError = { loadComicFromNetwork() })
             compositeDisposable.add(disposable)
+        } else if (latestComicId == defaultId) {
+            loadComicFromNetwork()
+        }
+    }
+
+    fun favComic(id: Int) {
+        val disposable = repository.favComic(id)
+                .subscribeOn(rxSchedulers.io())
+                .subscribe()
+        compositeDisposable.add(disposable)
+    }
+
+    fun unFavComic(id: Int) {
+        val disposable = repository.unFavComic(id)
+                .subscribeOn(rxSchedulers.io())
+                .subscribe()
+        compositeDisposable.add(disposable)
+    }
+
+    private fun loadComicFromNetwork() {
+        val disposable = comicToLoadFromNetwork()
+                .subscribeOn(rxSchedulers.io())
+                .doOnSuccess { compositeDisposable.add(repository.insertComic(it).subscribe()) }
+                .doFinally { view.isLoading = false }
+                .observeOn(rxSchedulers.mainThread())
+                .doOnSubscribe { view.showProgress() }
+                .doOnSuccess { view.show(it) }
+                .doFinally { view.hideProgress() }
+                .subscribeBy(onError = { Timber.e(it) })
+        compositeDisposable.add(disposable)
+    }
+
+    private fun comicToLoadFromNetwork(): Single<Comic> {
+        return when (latestComicId) {
+            defaultId -> repository.getComicNetwork().doOnSuccess { latestComicId = it.id }
+            else -> {
+                repository.getComicNetwork(latestComicId)
+            }
         }
     }
 

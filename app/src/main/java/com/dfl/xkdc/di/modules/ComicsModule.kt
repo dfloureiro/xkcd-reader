@@ -3,6 +3,7 @@ package com.dfl.xkdc.di.modules
 import com.dfl.xkdc.comics.ComicsAdapter
 import com.dfl.xkdc.comics.ComicsFragment
 import com.dfl.xkdc.comics.ComicsPresenter
+import com.dfl.xkdc.comics.ComicsRepository
 import com.dfl.xkdc.comics.uimodel.ComicsMapper
 import com.dfl.xkdc.di.scopes.PerFragment
 import com.dfl.xkdc.loaders.ImageLoader
@@ -17,11 +18,10 @@ class ComicsModule(private val comicsFragment: ComicsFragment) {
 
     @PerFragment
     @Provides
-    fun providesComicsPresenter(comicsMapper: ComicsMapper,
-                                services: XkcdServices,
+    fun providesComicsPresenter(repository: ComicsRepository,
                                 rxSchedulers: RxSchedulers,
                                 compositeDisposable: CompositeDisposable): ComicsPresenter {
-        return ComicsPresenter(comicsFragment, comicsMapper, services, rxSchedulers, compositeDisposable)
+        return ComicsPresenter(comicsFragment, repository, rxSchedulers, compositeDisposable)
     }
 
     @PerFragment

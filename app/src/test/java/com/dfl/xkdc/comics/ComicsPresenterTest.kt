@@ -1,11 +1,8 @@
 package com.dfl.xkdc.comics
 
-import android.accounts.NetworkErrorException
 import com.dfl.xkdc.comics.uimodel.Comic
-import com.dfl.xkdc.comics.uimodel.ComicsMapper
-import com.dfl.xkdc.model.ComicResponse
-import com.dfl.xkdc.network.XkcdServices
 import com.dfl.xkdc.schedulers.RxSchedulers
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -14,10 +11,10 @@ import junit.framework.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.BDDMockito.anyInt
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -26,9 +23,7 @@ class ComicsPresenterTest {
     @Mock
     private lateinit var view: ComicsFragment
     @Mock
-    private lateinit var mapper: ComicsMapper
-    @Mock
-    private lateinit var services: XkcdServices
+    private lateinit var repository: ComicsRepository
     @Mock
     private lateinit var rxSchedulers: RxSchedulers
     @Mock
@@ -40,82 +35,130 @@ class ComicsPresenterTest {
     fun setup() {
         given(rxSchedulers.io()).willReturn(Schedulers.trampoline())
         given(rxSchedulers.mainThread()).willReturn(Schedulers.trampoline())
-        cut = ComicsPresenter(view, mapper, services, rxSchedulers, compositeDisposable)
+        cut = ComicsPresenter(view, repository, rxSchedulers, compositeDisposable)
     }
 
     @Test
-    fun `given latest comic id is the default id when load comic then services get comic without id and view shows received comic`() {
+    fun `given latest comic id is the default when subscribe then load latest comic from network`() {
         //given
         cut.latestComicId = -10
-        val numId = 2000
-        val comicResponse = mock(ComicResponse::class.java)
-
-        given(comicResponse.num).willReturn(numId)
-        given(services.getComic()).willReturn(Single.just(comicResponse))
-
+        val comicId = 2000
         val comic = mock(Comic::class.java)
-        given(mapper.convert(comicResponse)).willReturn(comic)
+        given(comic.id).willReturn(comicId)
+        given(repository.getComicNetwork()).willReturn(Single.just(comic))
+        given(repository.insertComic(comic)).willReturn(Completable.complete())
 
         //when
-        cut.loadComic()
+        cut.subscribe()
 
         //then
+        assertEquals(cut.latestComicId, comicId)
+        assertFalse(view.isLoading)
+        verify(repository).insertComic(comic)
         verify(view).hideProgress()
         verify(view).show(comic)
-        assertFalse(view.isLoading)
-        assertEquals(cut.latestComicId, numId)
     }
 
     @Test
-    fun `given latest comic id is the bigger then 1 when load comic then services get comic with id and view shows received comic`() {
+    fun `given latest comic id is the default id when load comic then load latest comic from network`() {
         //given
-        cut.latestComicId = 2004
-        val expectedId = 2003
-
-        val comicResponse = mock(ComicResponse::class.java)
-        given(services.getComic(expectedId)).willReturn(Single.just(comicResponse))
-
+        cut.latestComicId = -10
+        val comicId = 2000
         val comic = mock(Comic::class.java)
-        given(mapper.convert(comicResponse)).willReturn(comic)
+        given(comic.id).willReturn(comicId)
+        given(repository.getComicNetwork()).willReturn(Single.just(comic))
+        given(repository.insertComic(comic)).willReturn(Completable.complete())
 
         //when
         cut.loadComic()
 
         //then
+        assertEquals(cut.latestComicId, comicId)
+        assertFalse(view.isLoading)
+        verify(repository).insertComic(comic)
         verify(view).hideProgress()
         verify(view).show(comic)
-        assertFalse(view.isLoading)
+    }
+
+    @Test
+    fun `given latest comic id is not the default id and not in the repository when load comic then load comic from network`() {
+        //given
+        cut.latestComicId = 2001
+        val expectedId = 2000
+        val comic = mock(Comic::class.java)
+        given(repository.getComicNetwork(expectedId)).willReturn(Single.just(comic))
+        given(repository.insertComic(comic)).willReturn(Completable.complete())
+        given(repository.getComicDatabase(expectedId)).willReturn(Single.error(Exception()))
+
+        //when
+        cut.loadComic()
+
+        //then
         assertEquals(cut.latestComicId, expectedId)
-    }
-
-    @Test
-    fun `given latest comic id is 1 when load comic then never call services`() {
-        //given
-        cut.latestComicId = 1
-
-        //when
-        cut.loadComic()
-
-        //then
-        verify(services, never()).getComic()
-        verify(services, never()).getComic(anyInt())
-    }
-
-    @Test
-    fun `given latest comic id when load comic gives error then hides progress stops loading and sets id`() {
-        //given
-        cut.latestComicId = 2004
-        val expectedId = 2003
-
-        given(services.getComic(expectedId)).willReturn(Single.error(NetworkErrorException()))
-
-        //when
-        cut.loadComic()
-
-        //then
+        assertFalse(view.isLoading)
+        verify(repository).insertComic(comic)
         verify(view).hideProgress()
-        assertFalse(view.isLoading)
+        verify(view).show(comic)
+    }
+
+    @Test
+    fun `given latest comic id is not the default id and in the repository when load comic then load comic from database`() {
+        //given
+        cut.latestComicId = 2001
+        val expectedId = 2000
+        val comic = mock(Comic::class.java)
+        given(repository.getComicDatabase(expectedId)).willReturn(Single.just(comic))
+
+        //when
+        cut.loadComic()
+
+        //then
         assertEquals(cut.latestComicId, expectedId)
+        assertFalse(view.isLoading)
+        verify(view).show(comic)
+    }
+
+    @Test
+    fun `given latest comic id is not the default id and not in the repository when load comic fails then load comic from network`() {
+        //given
+        cut.latestComicId = 2001
+        val expectedId = 2000
+        given(repository.getComicNetwork(expectedId)).willReturn(Single.error(Exception()))
+        given(repository.getComicDatabase(expectedId)).willReturn(Single.error(Exception()))
+
+        //when
+        cut.loadComic()
+
+        //then
+        assertEquals(cut.latestComicId, expectedId)
+        assertFalse(view.isLoading)
+        verify(view).hideProgress()
+    }
+
+    @Test
+    fun `given id when fav comic then repository fav comic`() {
+        //given
+        val id = 10
+        given(repository.favComic(id)).willReturn(Completable.complete())
+
+        //when
+        cut.favComic(id)
+
+        //then
+        verify(repository).favComic(id)
+    }
+
+    @Test
+    fun `given id when unFav comic then repository unFav comic`() {
+        //given
+        val id = 10
+        given(repository.unFavComic(id)).willReturn(Completable.complete())
+
+        //when
+        cut.unFavComic(id)
+
+        //then
+        verify(repository).unFavComic(id)
     }
 
     @Test
