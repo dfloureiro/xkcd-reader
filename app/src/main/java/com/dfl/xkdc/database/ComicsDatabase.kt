@@ -6,7 +6,7 @@ import android.support.annotation.Keep
 
 @Keep
 @Database(entities = [ComicEntity::class], exportSchema = false, version = 1)
-abstract class ComicsDatabase : RoomDatabase(){
+abstract class ComicsDatabase : RoomDatabase() {
 
-    abstract fun getComicsDao() : ComicsDao
+    abstract fun getComicsDao(): ComicsDao
 }

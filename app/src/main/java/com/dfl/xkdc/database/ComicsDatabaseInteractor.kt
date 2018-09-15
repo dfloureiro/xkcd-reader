@@ -10,7 +10,7 @@ class ComicsDatabaseInteractor(private val dao: ComicsDao) {
         return Completable.fromAction { dao.insert(comic) }
     }
 
-    fun getComic(id : Int) : Single<ComicEntity>{
+    fun getComic(id: Int): Single<ComicEntity> {
         return dao.getComic(id)
     }
 

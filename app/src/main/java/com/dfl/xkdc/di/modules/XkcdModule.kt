@@ -1,7 +1,5 @@
 package com.dfl.xkdc.di.modules
 
-import com.dfl.xkdc.comics.ComicsRepository
-import com.dfl.xkdc.comics.uimodel.ComicsMapper
 import com.dfl.xkdc.loaders.ImageLoader
 import com.dfl.xkdc.schedulers.RxSchedulers
 import com.dfl.xkdc.schedulers.RxSchedulersImpl

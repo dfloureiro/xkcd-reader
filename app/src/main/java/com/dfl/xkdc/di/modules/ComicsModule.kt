@@ -4,10 +4,8 @@ import com.dfl.xkdc.comics.ComicsAdapter
 import com.dfl.xkdc.comics.ComicsFragment
 import com.dfl.xkdc.comics.ComicsPresenter
 import com.dfl.xkdc.comics.ComicsRepository
-import com.dfl.xkdc.comics.uimodel.ComicsMapper
 import com.dfl.xkdc.di.scopes.PerFragment
 import com.dfl.xkdc.loaders.ImageLoader
-import com.dfl.xkdc.network.XkcdServices
 import com.dfl.xkdc.schedulers.RxSchedulers
 import dagger.Module
 import dagger.Provides
