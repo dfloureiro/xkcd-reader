@@ -39,9 +39,13 @@ class ComicsAdapterTest {
         val image = "url"
         val title = "title"
         val description = "description"
+        val id = 1000
+        val isFav = true
         given(comic.url).willReturn(image)
         given(comic.title).willReturn(title)
         given(comic.description).willReturn(description)
+        given(comic.id).willReturn(id)
+        given(comic.isFav).willReturn(isFav)
         given(list[position]).willReturn(comic)
 
         //when
@@ -51,6 +55,8 @@ class ComicsAdapterTest {
         verify(holder).setImage(image)
         verify(holder).setTitle(title)
         verify(holder).setDescription(description)
+        verify(holder).setId(id)
+        verify(holder).setFav(isFav)
     }
 
     @Test

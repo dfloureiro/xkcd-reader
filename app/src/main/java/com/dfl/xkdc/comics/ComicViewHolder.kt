@@ -57,4 +57,12 @@ class ComicViewHolder(itemView: View?, private val imageLoader: ImageLoader, pri
             }
         })
     }
+
+    /**
+     * set comic like button
+     * @param isFav if true button is liked
+     */
+    fun setFav(isFav: Boolean) {
+        itemView.findViewById<LikeButton>(R.id.comicLike).isLiked = isFav
+    }
 }

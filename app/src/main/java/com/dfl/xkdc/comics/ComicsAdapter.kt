@@ -29,6 +29,7 @@ class ComicsAdapter(private val comics: ArrayList<Comic>, private val imageLoade
             holder.setTitle(it.title)
             holder.setDescription(it.description)
             holder.setId(it.id)
+            holder.setFav(it.isFav)
         }
     }
 
