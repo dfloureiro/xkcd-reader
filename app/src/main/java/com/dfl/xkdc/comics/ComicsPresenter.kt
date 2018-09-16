@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
 class ComicsPresenter(private val view: ComicsFragment,
-                      private val repository: ComicsRepository,
+                      private val interactor: ComicsInteractor,
                       private val rxSchedulers: RxSchedulers,
                       private val compositeDisposable: CompositeDisposable) {
 
@@ -24,7 +24,7 @@ class ComicsPresenter(private val view: ComicsFragment,
     fun loadComic() {
         if (latestComicId > 1) {
             latestComicId -= 1
-            val disposable = repository.getComicDatabase(latestComicId)
+            val disposable = interactor.getComicRepository(latestComicId)
                     .subscribeOn(rxSchedulers.io())
                     .doOnError { Timber.d("Database can't find comic with id $latestComicId") }
                     .doOnSuccess { view.isLoading = false }
@@ -38,14 +38,14 @@ class ComicsPresenter(private val view: ComicsFragment,
     }
 
     fun favComic(id: Int) {
-        val disposable = repository.favComic(id)
+        val disposable = interactor.favComic(id)
                 .subscribeOn(rxSchedulers.io())
                 .subscribe()
         compositeDisposable.add(disposable)
     }
 
     fun unFavComic(id: Int) {
-        val disposable = repository.unFavComic(id)
+        val disposable = interactor.unFavComic(id)
                 .subscribeOn(rxSchedulers.io())
                 .subscribe()
         compositeDisposable.add(disposable)
@@ -54,7 +54,7 @@ class ComicsPresenter(private val view: ComicsFragment,
     private fun loadComicFromNetwork() {
         val disposable = comicToLoadFromNetwork()
                 .subscribeOn(rxSchedulers.io())
-                .doOnSuccess { compositeDisposable.add(repository.insertComic(it).subscribe()) }
+                .doOnSuccess { compositeDisposable.add(interactor.insertComic(it).subscribe()) }
                 .doFinally { view.isLoading = false }
                 .observeOn(rxSchedulers.mainThread())
                 .doOnSubscribe { view.showProgress() }
@@ -66,9 +66,9 @@ class ComicsPresenter(private val view: ComicsFragment,
 
     private fun comicToLoadFromNetwork(): Single<Comic> {
         return when (latestComicId) {
-            defaultId -> repository.getComicNetwork().doOnSuccess { latestComicId = it.id }
+            defaultId -> interactor.getComicNetwork().doOnSuccess { latestComicId = it.id }
             else -> {
-                repository.getComicNetwork(latestComicId)
+                interactor.getComicNetwork(latestComicId)
             }
         }
     }

@@ -23,7 +23,7 @@ class ComicsPresenterTest {
     @Mock
     private lateinit var view: ComicsFragment
     @Mock
-    private lateinit var repository: ComicsRepository
+    private lateinit var interactor: ComicsInteractor
     @Mock
     private lateinit var rxSchedulers: RxSchedulers
     @Mock
@@ -35,7 +35,7 @@ class ComicsPresenterTest {
     fun setup() {
         given(rxSchedulers.io()).willReturn(Schedulers.trampoline())
         given(rxSchedulers.mainThread()).willReturn(Schedulers.trampoline())
-        cut = ComicsPresenter(view, repository, rxSchedulers, compositeDisposable)
+        cut = ComicsPresenter(view, interactor, rxSchedulers, compositeDisposable)
     }
 
     @Test
@@ -45,8 +45,8 @@ class ComicsPresenterTest {
         val comicId = 2000
         val comic = mock(Comic::class.java)
         given(comic.id).willReturn(comicId)
-        given(repository.getComicNetwork()).willReturn(Single.just(comic))
-        given(repository.insertComic(comic)).willReturn(Completable.complete())
+        given(interactor.getComicNetwork()).willReturn(Single.just(comic))
+        given(interactor.insertComic(comic)).willReturn(Completable.complete())
 
         //when
         cut.subscribe()
@@ -54,7 +54,7 @@ class ComicsPresenterTest {
         //then
         assertEquals(cut.latestComicId, comicId)
         assertFalse(view.isLoading)
-        verify(repository).insertComic(comic)
+        verify(interactor).insertComic(comic)
         verify(view).hideProgress()
         verify(view).show(comic)
     }
@@ -66,8 +66,8 @@ class ComicsPresenterTest {
         val comicId = 2000
         val comic = mock(Comic::class.java)
         given(comic.id).willReturn(comicId)
-        given(repository.getComicNetwork()).willReturn(Single.just(comic))
-        given(repository.insertComic(comic)).willReturn(Completable.complete())
+        given(interactor.getComicNetwork()).willReturn(Single.just(comic))
+        given(interactor.insertComic(comic)).willReturn(Completable.complete())
 
         //when
         cut.loadComic()
@@ -75,7 +75,7 @@ class ComicsPresenterTest {
         //then
         assertEquals(cut.latestComicId, comicId)
         assertFalse(view.isLoading)
-        verify(repository).insertComic(comic)
+        verify(interactor).insertComic(comic)
         verify(view).hideProgress()
         verify(view).show(comic)
     }
@@ -86,9 +86,9 @@ class ComicsPresenterTest {
         cut.latestComicId = 2001
         val expectedId = 2000
         val comic = mock(Comic::class.java)
-        given(repository.getComicNetwork(expectedId)).willReturn(Single.just(comic))
-        given(repository.insertComic(comic)).willReturn(Completable.complete())
-        given(repository.getComicDatabase(expectedId)).willReturn(Single.error(Exception()))
+        given(interactor.getComicNetwork(expectedId)).willReturn(Single.just(comic))
+        given(interactor.insertComic(comic)).willReturn(Completable.complete())
+        given(interactor.getComicRepository(expectedId)).willReturn(Single.error(Exception()))
 
         //when
         cut.loadComic()
@@ -96,7 +96,7 @@ class ComicsPresenterTest {
         //then
         assertEquals(cut.latestComicId, expectedId)
         assertFalse(view.isLoading)
-        verify(repository).insertComic(comic)
+        verify(interactor).insertComic(comic)
         verify(view).hideProgress()
         verify(view).show(comic)
     }
@@ -107,7 +107,7 @@ class ComicsPresenterTest {
         cut.latestComicId = 2001
         val expectedId = 2000
         val comic = mock(Comic::class.java)
-        given(repository.getComicDatabase(expectedId)).willReturn(Single.just(comic))
+        given(interactor.getComicRepository(expectedId)).willReturn(Single.just(comic))
 
         //when
         cut.loadComic()
@@ -123,8 +123,8 @@ class ComicsPresenterTest {
         //given
         cut.latestComicId = 2001
         val expectedId = 2000
-        given(repository.getComicNetwork(expectedId)).willReturn(Single.error(Exception()))
-        given(repository.getComicDatabase(expectedId)).willReturn(Single.error(Exception()))
+        given(interactor.getComicNetwork(expectedId)).willReturn(Single.error(Exception()))
+        given(interactor.getComicRepository(expectedId)).willReturn(Single.error(Exception()))
 
         //when
         cut.loadComic()
@@ -139,26 +139,26 @@ class ComicsPresenterTest {
     fun `given id when fav comic then repository fav comic`() {
         //given
         val id = 10
-        given(repository.favComic(id)).willReturn(Completable.complete())
+        given(interactor.favComic(id)).willReturn(Completable.complete())
 
         //when
         cut.favComic(id)
 
         //then
-        verify(repository).favComic(id)
+        verify(interactor).favComic(id)
     }
 
     @Test
     fun `given id when unFav comic then repository unFav comic`() {
         //given
         val id = 10
-        given(repository.unFavComic(id)).willReturn(Completable.complete())
+        given(interactor.unFavComic(id)).willReturn(Completable.complete())
 
         //when
         cut.unFavComic(id)
 
         //then
-        verify(repository).unFavComic(id)
+        verify(interactor).unFavComic(id)
     }
 
     @Test

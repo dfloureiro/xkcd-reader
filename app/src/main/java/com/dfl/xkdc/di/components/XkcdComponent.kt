@@ -1,7 +1,7 @@
 package com.dfl.xkdc.di.components
 
 import com.dfl.xkdc.XkcdApplication
-import com.dfl.xkdc.comics.ComicsRepository
+import com.dfl.xkdc.comics.ComicsInteractor
 import com.dfl.xkdc.di.modules.RepositoryModule
 import com.dfl.xkdc.di.modules.XkcdModule
 import com.dfl.xkdc.loaders.ImageLoader
@@ -19,5 +19,5 @@ interface XkcdComponent {
 
     fun rxSchedulers(): RxSchedulers
 
-    fun comicsRepository(): ComicsRepository
+    fun comicsInteractor(): ComicsInteractor
 }

@@ -2,11 +2,11 @@ package com.dfl.xkdc.di.modules
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.dfl.xkdc.comics.ComicsRepository
+import com.dfl.xkdc.comics.ComicsInteractor
 import com.dfl.xkdc.comics.uimodel.ComicsMapper
 import com.dfl.xkdc.database.ComicsDao
 import com.dfl.xkdc.database.ComicsDatabase
-import com.dfl.xkdc.database.ComicsDatabaseInteractor
+import com.dfl.xkdc.database.ComicsRepository
 import com.dfl.xkdc.network.XkcdServices
 import dagger.Module
 import dagger.Provides
@@ -31,13 +31,13 @@ class RepositoryModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun providedComicsDatabaseInteractor(dao: ComicsDao): ComicsDatabaseInteractor {
-        return ComicsDatabaseInteractor(dao)
+    fun providedComicsRepository(dao: ComicsDao): ComicsRepository {
+        return ComicsRepository(dao)
     }
 
     @Provides
     @Singleton
-    fun providesComicsRepository(services: XkcdServices, interactor: ComicsDatabaseInteractor, mapper: ComicsMapper): ComicsRepository {
-        return ComicsRepository(services, interactor, mapper)
+    fun providesComicsInteractor(services: XkcdServices, repository: ComicsRepository, mapper: ComicsMapper): ComicsInteractor {
+        return ComicsInteractor(services, repository, mapper)
     }
 }
