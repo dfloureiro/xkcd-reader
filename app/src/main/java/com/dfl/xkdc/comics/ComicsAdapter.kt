@@ -7,6 +7,12 @@ import com.dfl.xkdc.R
 import com.dfl.xkdc.loader.ImageLoader
 import com.dfl.xkdc.uimodel.Comic
 
+/**
+ * comics adapter do display all comics
+ * @param comics list of comics
+ * @param imageLoader loads images
+ * @param comicFavPresenter handles fav options for comics
+ */
 class ComicsAdapter(private val comics: ArrayList<Comic>, private val imageLoader: ImageLoader, private val comicFavPresenter: ComicFavPresenter) : RecyclerView.Adapter<ComicViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {
@@ -26,11 +32,19 @@ class ComicsAdapter(private val comics: ArrayList<Comic>, private val imageLoade
         }
     }
 
+    /**
+     * add comic to adapter
+     * @param comic comic to add
+     */
     fun add(comic: Comic) {
         comics.add(comic)
         notifyItemInserted(itemCount)
     }
 
+    /**
+     * removes comic from adapter
+     * @param index position of the comic to remove
+     */
     fun remove(index: Int) {
         comics.removeAt(index)
         notifyItemRemoved(index)

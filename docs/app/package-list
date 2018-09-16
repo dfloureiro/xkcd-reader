@@ -1,0 +1,17 @@
+$dokka.format:gfm
+$dokka.linkExtension:md
+
+com.dfl.xkdc
+com.dfl.xkdc.comics
+com.dfl.xkdc.di.components
+com.dfl.xkdc.di.injectors
+com.dfl.xkdc.di.modules
+com.dfl.xkdc.di.scopes
+com.dfl.xkdc.interactor
+com.dfl.xkdc.loader
+com.dfl.xkdc.mapper
+com.dfl.xkdc.model
+com.dfl.xkdc.network
+com.dfl.xkdc.repository
+com.dfl.xkdc.schedulers
+com.dfl.xkdc.uimodel

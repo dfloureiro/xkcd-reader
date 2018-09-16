@@ -14,6 +14,9 @@ import com.dfl.xkdc.uimodel.Comic
 import kotlinx.android.synthetic.main.comics_fragment.*
 import javax.inject.Inject
 
+/**
+ * Fragment that displays all comics
+ */
 class ComicsFragment : Fragment() {
 
     private val visibleThreshold = 5
@@ -40,6 +43,10 @@ class ComicsFragment : Fragment() {
         return inflater.inflate(R.layout.comics_fragment, container, false)
     }
 
+    /**
+     * sets recycler view and scroll listener
+     * subscribes presenter
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -61,10 +68,18 @@ class ComicsFragment : Fragment() {
         presenter.subscribe()
     }
 
+    /**
+     * show comic in adapter
+     * @param comic comic to show
+     */
     fun show(comic: Comic) {
         adapter.add(comic)
     }
 
+    /**
+     * remove comic in adapter
+     * @param position position of the comic to remove
+     */
     fun remove(position: Int) {
         adapter.remove(position)
     }

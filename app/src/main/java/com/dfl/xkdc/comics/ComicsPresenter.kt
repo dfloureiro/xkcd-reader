@@ -9,6 +9,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 
+/**
+ * Presenter that handles all interactions with comics
+ * @param view fragment view
+ * @param interactor interactor to interact with local repository and network
+ * @param rxSchedulers schedulers to subscribe on
+ * @param compositeDisposable add and dispose disposables
+ */
 class ComicsPresenter(private val view: ComicsFragment,
                       private val interactor: ComicsInteractor,
                       private val rxSchedulers: RxSchedulers,
@@ -18,10 +25,19 @@ class ComicsPresenter(private val view: ComicsFragment,
     @VisibleForTesting
     var latestComicId: Int = defaultId
 
+    /**
+     * subscribe the presenter initial tasks
+     */
     fun subscribe() {
         loadComicFromNetwork()
     }
 
+    /**
+     * loads comic to display
+     * if no valid id present, loads latest from network
+     * if valid id present, and in the comic repository, loads from repository
+     * if valid id present, and not in the comic repository, loads from network
+     */
     fun loadComic() {
         if (latestComicId > 1) {
             latestComicId -= 1
@@ -38,6 +54,10 @@ class ComicsPresenter(private val view: ComicsFragment,
         }
     }
 
+    /**
+     * set comic as fav
+     * @param id id of the comic to fav
+     */
     override fun favComic(id: Int) {
         val disposable = interactor.favComic(id)
                 .subscribeOn(rxSchedulers.io())
@@ -45,6 +65,10 @@ class ComicsPresenter(private val view: ComicsFragment,
         compositeDisposable.add(disposable)
     }
 
+    /**
+     * set comic as unFav
+     * @param id id of the comic to unFav
+     */
     override fun unFavComic(id: Int) {
         val disposable = interactor.unFavComic(id)
                 .subscribeOn(rxSchedulers.io())
@@ -52,6 +76,9 @@ class ComicsPresenter(private val view: ComicsFragment,
         compositeDisposable.add(disposable)
     }
 
+    /**
+     * load comic from network and saves it to the repository
+     */
     private fun loadComicFromNetwork() {
         val disposable = comicToLoadFromNetwork()
                 .subscribeOn(rxSchedulers.io())
@@ -65,6 +92,12 @@ class ComicsPresenter(private val view: ComicsFragment,
         compositeDisposable.add(disposable)
     }
 
+    /**
+     * checks what observable to load:
+     * if no valid id loads load latest
+     * if valid id load with id
+     * @return observable to subscribe
+     */
     private fun comicToLoadFromNetwork(): Single<Comic> {
         return when (latestComicId) {
             defaultId -> interactor.getComicNetwork().doOnSuccess { latestComicId = it.id }
@@ -74,6 +107,9 @@ class ComicsPresenter(private val view: ComicsFragment,
         }
     }
 
+    /**
+     * disposes all disposables
+     */
     fun unsubscribe() {
         compositeDisposable.dispose()
     }
