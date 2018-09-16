@@ -42,11 +42,14 @@ class ComicViewHolder(itemView: View?, private val imageLoader: ImageLoader, pri
     }
 
     /**
+     * set comic number
      * set comic id and like button listener
      * when liked fav comic
      * when unLiked unFav comic
      */
     fun setId(id: Int) {
+        val number = "#$id"
+        itemView.findViewById<TextView>(R.id.comicNumber).text = number
         itemView.findViewById<LikeButton>(R.id.comicLike).setOnLikeListener(object : OnLikeListener {
             override fun liked(likeButton: LikeButton) {
                 favPresenter.favComic(id)
