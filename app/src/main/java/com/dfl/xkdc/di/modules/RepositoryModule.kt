@@ -2,11 +2,11 @@ package com.dfl.xkdc.di.modules
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.dfl.xkdc.comics.ComicsInteractor
-import com.dfl.xkdc.comics.uimodel.ComicsMapper
-import com.dfl.xkdc.database.ComicsDao
-import com.dfl.xkdc.database.ComicsDatabase
-import com.dfl.xkdc.database.ComicsRepository
+import com.dfl.xkdc.interactor.ComicsInteractor
+import com.dfl.xkdc.mapper.ComicsMapper
+import com.dfl.xkdc.repository.ComicsDao
+import com.dfl.xkdc.repository.ComicsDatabase
+import com.dfl.xkdc.repository.ComicsRepository
 import com.dfl.xkdc.network.XkcdServices
 import dagger.Module
 import dagger.Provides

@@ -1,4 +1,4 @@
-package com.dfl.xkdc.database
+package com.dfl.xkdc.repository
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase

@@ -1,6 +1,7 @@
-package com.dfl.xkdc.comics.uimodel
+package com.dfl.xkdc.mapper
 
-import com.dfl.xkdc.database.ComicEntity
+import com.dfl.xkdc.uimodel.Comic
+import com.dfl.xkdc.repository.ComicEntity
 import com.dfl.xkdc.model.ComicResponse
 
 class ComicsMapper {

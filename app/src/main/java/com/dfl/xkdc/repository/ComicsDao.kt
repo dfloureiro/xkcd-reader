@@ -1,4 +1,4 @@
-package com.dfl.xkdc.database
+package com.dfl.xkdc.repository
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert

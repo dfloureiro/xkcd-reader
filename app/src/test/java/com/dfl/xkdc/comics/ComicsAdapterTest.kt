@@ -1,7 +1,7 @@
 package com.dfl.xkdc.comics
 
-import com.dfl.xkdc.comics.uimodel.Comic
-import com.dfl.xkdc.loaders.ImageLoader
+import com.dfl.xkdc.uimodel.Comic
+import com.dfl.xkdc.loader.ImageLoader
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

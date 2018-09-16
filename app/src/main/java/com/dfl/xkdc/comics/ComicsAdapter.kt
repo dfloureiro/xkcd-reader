@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.dfl.xkdc.R
-import com.dfl.xkdc.comics.uimodel.Comic
-import com.dfl.xkdc.loaders.ImageLoader
+import com.dfl.xkdc.uimodel.Comic
+import com.dfl.xkdc.loader.ImageLoader
 
 class ComicsAdapter(private val comics: ArrayList<Comic>, private val imageLoader: ImageLoader) : RecyclerView.Adapter<ComicViewHolder>() {
 

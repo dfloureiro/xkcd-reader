@@ -1,4 +1,4 @@
-package com.dfl.xkdc.database
+package com.dfl.xkdc.repository
 
 import io.reactivex.Completable
 import io.reactivex.Flowable

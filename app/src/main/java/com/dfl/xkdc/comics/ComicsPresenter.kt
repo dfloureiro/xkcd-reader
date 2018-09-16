@@ -1,7 +1,8 @@
 package com.dfl.xkdc.comics
 
 import android.support.annotation.VisibleForTesting
-import com.dfl.xkdc.comics.uimodel.Comic
+import com.dfl.xkdc.interactor.ComicsInteractor
+import com.dfl.xkdc.uimodel.Comic
 import com.dfl.xkdc.schedulers.RxSchedulers
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable

@@ -1,4 +1,4 @@
-package com.dfl.xkdc.loaders
+package com.dfl.xkdc.loader
 
 import android.widget.ImageView
 import com.dfl.xkdc.R

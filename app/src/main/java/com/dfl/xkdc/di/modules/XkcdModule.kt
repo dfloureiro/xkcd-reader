@@ -1,6 +1,6 @@
 package com.dfl.xkdc.di.modules
 
-import com.dfl.xkdc.loaders.ImageLoader
+import com.dfl.xkdc.loader.ImageLoader
 import com.dfl.xkdc.schedulers.RxSchedulers
 import com.dfl.xkdc.schedulers.RxSchedulersImpl
 import com.squareup.picasso.Picasso

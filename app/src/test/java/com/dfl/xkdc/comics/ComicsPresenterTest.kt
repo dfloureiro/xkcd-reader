@@ -1,6 +1,7 @@
 package com.dfl.xkdc.comics
 
-import com.dfl.xkdc.comics.uimodel.Comic
+import com.dfl.xkdc.interactor.ComicsInteractor
+import com.dfl.xkdc.uimodel.Comic
 import com.dfl.xkdc.schedulers.RxSchedulers
 import io.reactivex.Completable
 import io.reactivex.Single

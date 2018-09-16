@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.dfl.xkdc.R
 import com.dfl.xkdc.RobolectricXkcdApplication
-import com.dfl.xkdc.comics.uimodel.Comic
+import com.dfl.xkdc.uimodel.Comic
 import junit.framework.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test

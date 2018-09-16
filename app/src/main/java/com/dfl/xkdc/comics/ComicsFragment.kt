@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.dfl.xkdc.R
 import com.dfl.xkdc.XkcdApplication
-import com.dfl.xkdc.comics.uimodel.Comic
+import com.dfl.xkdc.uimodel.Comic
 import kotlinx.android.synthetic.main.comics_fragment.*
 import javax.inject.Inject
 

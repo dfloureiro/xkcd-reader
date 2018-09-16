@@ -1,8 +1,8 @@
-package com.dfl.xkdc.comics
+package com.dfl.xkdc.interactor
 
-import com.dfl.xkdc.comics.uimodel.Comic
-import com.dfl.xkdc.comics.uimodel.ComicsMapper
-import com.dfl.xkdc.database.ComicsRepository
+import com.dfl.xkdc.uimodel.Comic
+import com.dfl.xkdc.mapper.ComicsMapper
+import com.dfl.xkdc.repository.ComicsRepository
 import com.dfl.xkdc.network.XkcdServices
 import io.reactivex.Completable
 import io.reactivex.Flowable
