@@ -61,6 +61,7 @@ class ComicsPresenter(private val view: ComicsFragment,
     override fun favComic(id: Int) {
         val disposable = interactor.favComic(id)
                 .subscribeOn(rxSchedulers.io())
+                .doOnComplete { Timber.d("Fav comic with id $id") }
                 .subscribe()
         compositeDisposable.add(disposable)
     }
@@ -72,6 +73,7 @@ class ComicsPresenter(private val view: ComicsFragment,
     override fun unFavComic(id: Int) {
         val disposable = interactor.unFavComic(id)
                 .subscribeOn(rxSchedulers.io())
+                .doOnComplete { Timber.d("UnFav comic with id $id") }
                 .subscribe()
         compositeDisposable.add(disposable)
     }
@@ -84,6 +86,8 @@ class ComicsPresenter(private val view: ComicsFragment,
                 .subscribeOn(rxSchedulers.io())
                 .doOnSuccess { compositeDisposable.add(interactor.insertComic(it).subscribe()) }
                 .doFinally { view.isLoading = false }
+                .doOnSuccess { Timber.d("Loading comic from network with id $latestComicId") }
+                .doOnError { Timber.d("Failed to load comic from network with id $latestComicId") }
                 .observeOn(rxSchedulers.mainThread())
                 .doOnSubscribe { view.showProgress() }
                 .doOnSuccess { view.show(it) }
