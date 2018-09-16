@@ -2,8 +2,8 @@ package com.dfl.xkdc.comics
 
 import android.support.annotation.VisibleForTesting
 import com.dfl.xkdc.interactor.ComicsInteractor
-import com.dfl.xkdc.uimodel.Comic
 import com.dfl.xkdc.schedulers.RxSchedulers
+import com.dfl.xkdc.uimodel.Comic
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -12,7 +12,7 @@ import timber.log.Timber
 class ComicsPresenter(private val view: ComicsFragment,
                       private val interactor: ComicsInteractor,
                       private val rxSchedulers: RxSchedulers,
-                      private val compositeDisposable: CompositeDisposable) {
+                      private val compositeDisposable: CompositeDisposable) : ComicFavPresenter {
 
     private val defaultId = -10
     @VisibleForTesting
@@ -38,14 +38,14 @@ class ComicsPresenter(private val view: ComicsFragment,
         }
     }
 
-    fun favComic(id: Int) {
+    override fun favComic(id: Int) {
         val disposable = interactor.favComic(id)
                 .subscribeOn(rxSchedulers.io())
                 .subscribe()
         compositeDisposable.add(disposable)
     }
 
-    fun unFavComic(id: Int) {
+    override fun unFavComic(id: Int) {
         val disposable = interactor.unFavComic(id)
                 .subscribeOn(rxSchedulers.io())
                 .subscribe()

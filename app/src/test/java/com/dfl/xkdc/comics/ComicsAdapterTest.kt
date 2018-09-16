@@ -1,7 +1,7 @@
 package com.dfl.xkdc.comics
 
-import com.dfl.xkdc.uimodel.Comic
 import com.dfl.xkdc.loader.ImageLoader
+import com.dfl.xkdc.uimodel.Comic
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,13 +19,15 @@ class ComicsAdapterTest {
     private lateinit var imageLoader: ImageLoader
     @Mock
     private lateinit var list: ArrayList<Comic>
+    @Mock
+    private lateinit var presenter: ComicFavPresenter
 
     private lateinit var cut: ComicsAdapter
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        cut = ComicsAdapter(list, imageLoader)
+        cut = ComicsAdapter(list, imageLoader, presenter)
     }
 
     @Test
