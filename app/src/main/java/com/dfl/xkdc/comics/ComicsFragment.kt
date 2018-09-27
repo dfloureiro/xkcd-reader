@@ -4,14 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dfl.xkdc.R
 import com.dfl.xkdc.XkcdApplication
 import com.dfl.xkdc.uimodel.Comic
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.comics_fragment.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -25,8 +28,8 @@ class ComicsFragment : Fragment() {
     lateinit var presenter: ComicsPresenter
     @Inject
     lateinit var adapter: ComicsAdapter
-
-    var isLoading = false
+    @Inject
+    lateinit var compositeDisposable: CompositeDisposable
 
     companion object {
         fun newInstance(): ComicsFragment {
@@ -51,19 +54,13 @@ class ComicsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         comicsRecyclerView.adapter = adapter
-        comicsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView != null) {
-                    val totalItemCount = recyclerView.layoutManager.itemCount
-                    val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                    if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
-                        isLoading = true
-                        presenter.loadComic()
-                    }
-                }
-            }
-        })
+        compositeDisposable.add(
+                RxRecyclerView.scrollEvents(comicsRecyclerView)
+                        .sample(100, TimeUnit.MILLISECONDS)
+                        .map { it.view().layoutManager as LinearLayoutManager }
+                        .filter { it.itemCount <= it.findLastVisibleItemPosition() + visibleThreshold }
+                        .subscribeBy(onNext = { presenter.loadComic() })
+        )
 
         presenter.subscribe()
     }

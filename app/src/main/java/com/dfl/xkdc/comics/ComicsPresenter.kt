@@ -43,8 +43,8 @@ class ComicsPresenter(private val view: ComicsFragment,
             latestComicId -= 1
             val disposable = interactor.getComicRepository(latestComicId)
                     .subscribeOn(rxSchedulers.io())
-                    .doOnError { Timber.d("Database can't find comic with id $latestComicId") }
-                    .doOnSuccess { view.isLoading = false }
+                    .doOnSuccess { Timber.d("Load from repository comic with id $latestComicId") }
+                    .doOnError { Timber.d("Repository can't find comic with id $latestComicId") }
                     .observeOn(rxSchedulers.mainThread())
                     .doOnSuccess { view.show(it) }
                     .subscribeBy(onError = { loadComicFromNetwork() })
@@ -85,8 +85,7 @@ class ComicsPresenter(private val view: ComicsFragment,
         val disposable = comicToLoadFromNetwork()
                 .subscribeOn(rxSchedulers.io())
                 .doOnSuccess { compositeDisposable.add(interactor.insertComic(it).subscribe()) }
-                .doFinally { view.isLoading = false }
-                .doOnSuccess { Timber.d("Loading comic from network with id $latestComicId") }
+                .doOnSuccess { Timber.d("Loaded comic from network with id $latestComicId") }
                 .doOnError { Timber.d("Failed to load comic from network with id $latestComicId") }
                 .observeOn(rxSchedulers.mainThread())
                 .doOnSubscribe { view.showProgress() }

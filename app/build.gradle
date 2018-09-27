@@ -5,14 +5,18 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka-android'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.dfl.xkdc"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     testOptions {
         unitTests {
@@ -56,6 +60,11 @@ dependencies {
     //rx
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkoltin_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    //rx binding
+    implementation "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:$rxbinding_version"
+    implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rxbinding_version"
+    implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxbinding_version"
 
     //picasso
     implementation("com.squareup.picasso:picasso:$picasso_version") {

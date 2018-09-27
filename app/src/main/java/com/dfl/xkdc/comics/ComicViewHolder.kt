@@ -14,7 +14,7 @@ import com.like.OnLikeListener
  * @param imageLoader loads images from url into view
  * @param favPresenter fav and UnFav comics by id
  */
-class ComicViewHolder(itemView: View?, private val imageLoader: ImageLoader, private val favPresenter: ComicFavPresenter) : RecyclerView.ViewHolder(itemView) {
+class ComicViewHolder(itemView: View, private val imageLoader: ImageLoader, private val favPresenter: ComicFavPresenter) : RecyclerView.ViewHolder(itemView) {
 
     /**
      * set comic image
